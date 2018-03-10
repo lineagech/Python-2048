@@ -3,7 +3,7 @@ import update
 
 SIZE = 720
 GRID_LEN = 4
-GRID_PADDING = 10
+GRID_PADDING = 1
 
 BACKGROUND_COLOR_GAME = "#92877d"
 BACKGROUND_COLOR_CELL_EMPTY = "#9e948a"
@@ -24,8 +24,10 @@ class Window(Frame):
         ## Parent class initalization
 
         super(Window, self).__init__(master, height=SIZE, width=SIZE, bg=BACKGROUND_COLOR_GAME)
-        self.grid()
-        self.propagate(False)
+        self.grid(row=0, column=0, sticky="we")
+        self.grid_propagate(False)
+
+        #self.master = master
         # self.frame = Frame(master, height=SIZE, width=SIZE,
         #                    bg=BACKGROUND_COLOR_GAME)
         # self.frame.grid()
@@ -51,12 +53,18 @@ class Window(Frame):
         for i in range(4):
             tmp_cell_list = []
             for j in range(4):
-                one_grid = Frame(self, width=SIZE/GRID_LEN, height=SIZE/GRID_LEN)
+                one_grid = Frame(self, width=SIZE/GRID_LEN, height=SIZE /
+                                 GRID_LEN, bg=BACKGROUND_COLOR_CELL_EMPTY)
                 one_grid.grid(row=i, column=j, padx=GRID_PADDING, pady=GRID_PADDING)
-                one_grid.propagate(False)
+                one_grid.grid_propagate(False)
 
-                label = Label(one_grid, text="", font=FONT, justify=CENTER, bg=BACKGROUND_COLOR_CELL_EMPTY)
-                label.grid()
+                label = Label(one_grid, font=FONT, justify=CENTER,
+                              bg=BACKGROUND_COLOR_CELL_EMPTY)
+                label.grid(sticky=N+E+W+S)
+                
+                one_grid.grid_columnconfigure(0, weight=1)
+                one_grid.grid_rowconfigure(0, weight=1)
+
                 tmp_cell_list.append(label)
 
             self.cell.append(tmp_cell_list)
@@ -93,8 +101,8 @@ class Window(Frame):
         self.update_matrix_cell()
 
 root = Tk()
-# root.geometry("{}x{}".format(SIZE, SIZE))
-# root.resizable(0, 0)
+root.geometry("{}x{}".format(SIZE, SIZE))
+#root.resizable(0, 0)
 
 window = Window(root)
 
